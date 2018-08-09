@@ -36,6 +36,10 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
 
     implementation 'de.hdodenhof:circleimageview:2.2.0'
+        //QR SCANNER
+    compile 'com.journeyapps:zxing-android-embedded:3.6.0'
+    compile 'com.google.zxing:core:3.3.0'
+
 
 
 
