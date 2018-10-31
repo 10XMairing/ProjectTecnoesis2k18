@@ -26,7 +26,6 @@ public class HomeActivity extends AppCompatActivity{
     FragmentAdapter fragAdapter;
     ViewPager viewPager;
     SharedPreferences preferences;
-    public static  int loginResult = -1;
 
 
     @Override
@@ -99,19 +98,6 @@ public class HomeActivity extends AppCompatActivity{
 
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        loginResult = getIntent().getIntExtra(LoginActivity.LOGIN_KEY, -1);
-        if(loginResult != 1){
-            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-            if(currentUser == null){
-                Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
-                startActivity(intent);
-            }
-        }
-
-    }
 
 
 

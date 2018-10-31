@@ -1,0 +1,55 @@
+Index: app/src/main/java/com/tecnoesis/tecnoesisApp/tecnoesis2k18/Activity/FragmentHotEvents.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.tecnoesis.tecnoesisApp.tecnoesis2k18.Activity;\n\nimport android.content.Intent;\nimport android.net.Uri;\nimport android.os.Bundle;\nimport android.support.annotation.NonNull;\nimport android.support.annotation.Nullable;\nimport android.support.design.widget.FloatingActionButton;\nimport android.support.v4.app.Fragment;\nimport android.support.v7.widget.GridLayoutManager;\nimport android.support.v7.widget.LinearLayoutManager;\nimport android.support.v7.widget.RecyclerView;\nimport android.view.LayoutInflater;\nimport android.view.View;\nimport android.view.ViewGroup;\nimport android.widget.Toast;\n\nimport com.tecnoesis.tecnoesisApp.tecnoesis2k18.Adapters.CustomGroupingAdapter;\nimport com.tecnoesis.tecnoesisApp.tecnoesis2k18.R;\nimport com.google.zxing.integration.android.IntentIntegrator;\nimport com.google.zxing.integration.android.IntentResult;\n\npublic class FragmentHotEvents extends Fragment{\n\n    RecyclerView recyclerView;\n    CustomGroupingAdapter adapter;\n    FloatingActionButton fab;\n\n\n\n    @Nullable\n    @Override\n    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {\n        View view = inflater.inflate(R.layout.fragment_hot_events, container, false);\n        recyclerView = view.findViewById(R.id.recyclerView_whatshot);\n\n        adapter = new CustomGroupingAdapter(getActivity());\n        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);\n        layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {\n            @Override\n            public int getSpanSize(int position) {\n                int type = adapter.getItemViewType(position);\n                switch (type){\n                    case 0://header\n                        return 2;\n                    case 1:\n                        return 1;\n                        default:\n                            return 1;\n                }\n            }\n        });\n        recyclerView.setLayoutManager(layoutManager);\n        recyclerView.setAdapter(adapter);\n\n\n        return view;\n    }\n\n\n\n\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/tecnoesis/tecnoesisApp/tecnoesis2k18/Activity/FragmentHotEvents.java	(revision c905212a5a48e7ae01ef396cd94b18463e6db9e8)
++++ app/src/main/java/com/tecnoesis/tecnoesisApp/tecnoesis2k18/Activity/FragmentHotEvents.java	(date 1540474044000)
+@@ -10,11 +10,18 @@
+ import android.support.v7.widget.GridLayoutManager;
+ import android.support.v7.widget.LinearLayoutManager;
+ import android.support.v7.widget.RecyclerView;
++import android.util.Log;
+ import android.view.LayoutInflater;
+ import android.view.View;
+ import android.view.ViewGroup;
+ import android.widget.Toast;
+ 
++import com.google.android.gms.tasks.OnCompleteListener;
++import com.google.android.gms.tasks.Task;
++import com.google.firebase.firestore.CollectionReference;
++import com.google.firebase.firestore.DocumentReference;
++import com.google.firebase.firestore.DocumentSnapshot;
++import com.google.firebase.firestore.FirebaseFirestore;
+ import com.tecnoesis.tecnoesisApp.tecnoesis2k18.Adapters.CustomGroupingAdapter;
+ import com.tecnoesis.tecnoesisApp.tecnoesis2k18.R;
+ import com.google.zxing.integration.android.IntentIntegrator;
+@@ -26,6 +33,9 @@
+     CustomGroupingAdapter adapter;
+     FloatingActionButton fab;
+ 
++    FirebaseFirestore mDb = FirebaseFirestore.getInstance();
++
++
+ 
+ 
+     @Nullable
+@@ -34,6 +44,16 @@
+         View view = inflater.inflate(R.layout.fragment_hot_events, container, false);
+         recyclerView = view.findViewById(R.id.recyclerView_whatshot);
+ 
++        DocumentReference docref = mDb.collection("events").document("images");
++        docref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
++            @Override
++            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
++                    DocumentSnapshot snap = task.getResult();
++                Log.d(TAG, )
++            }
++        });
++
++
+         adapter = new CustomGroupingAdapter(getActivity());
+         GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
+         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {

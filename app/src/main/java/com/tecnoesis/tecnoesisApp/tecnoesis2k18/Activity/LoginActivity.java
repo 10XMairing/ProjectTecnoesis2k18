@@ -54,205 +54,35 @@ public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "GOOGLELOG";
     FirebaseAuth mAuth;
     ImageView imgView, smallLogo;
-    Button btnLogin, btnNoLogin;
-    LottieAnimationView lottieAnim;
-    private GoogleSignInClient mGoogleSignInClient;
+    Button btnNoLogin;
 
 
-    GoogleSignInOptions gso;
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, "onActivityResult called");
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == RC_SIGN_IN) {
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            try {
-                // Google Sign In was successful, authenticate with Firebase
-                GoogleSignInAccount account = task.getResult(ApiException.class);
-                assert account != null;
-                firebaseAuthWithGoogle(account);
-            } catch (ApiException e) {
-                // Google Sign In failed, update UI appropriately
-                Log.w(TAG, "Google sign in failed", e);
-                // ...
-                Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
-                showAnimation("stop");
-            }
-        }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        //check if user is signed on and update Ui accordingly
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        updateUI(currentUser);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         imgView = findViewById(R.id.iv_loader_image);
-        btnLogin = findViewById(R.id.btn_login);
         smallLogo = findViewById(R.id.iv_logo_small);
         imgView.setVisibility(View.VISIBLE);
-        btnLogin.setVisibility(View.GONE);
         btnNoLogin = findViewById(R.id.btn_no_login);
         btnNoLogin.setVisibility(View.GONE);
-
-        btnNoLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                intent.putExtra(LOGIN_KEY, NO_LOGIN);
-                startActivity(intent);
-            }
-        });
-
-
-        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
-        //lottie animation view
-        lottieAnim = findViewById(R.id.lottie_loading);
-
-        //auth
-        mAuth = FirebaseAuth.getInstance();
-        mCallbackManager = CallbackManager.Factory.create();
-
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //sign in with google
-                showAnimation("start");
-                signInGoogle();
-
-     /*           showAnimation("start");
-                LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this, Arrays.asList("public_profile"));
-                LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
-                    @Override
-                    public void onSuccess(LoginResult loginResult) {
-                        Log.d(TAG, "facebook:onSuccess:" + loginResult);
-                        handleFacebookAccessToken(loginResult.getAccessToken());
-                    }
-
-                    @Override
-                    public void onCancel() {
-                        showAnimation("stop");
-                        Log.d(TAG, "facebook:onCancel");
-                        // ...
-                    }
-
-                    @Override
-                    public void onError(FacebookException error) {
-                        showAnimation("stop");
-                        Log.d(TAG, "facebook:onError", error);
-                        // ...
-                    }
-                });*/
-            }
-        });
-
 
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                imgView.setVisibility(View.GONE);
-                btnLogin.setVisibility(View.VISIBLE);
-                btnNoLogin.setVisibility(View.VISIBLE);
-                smallLogo.setVisibility(View.VISIBLE);
+                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                intent.putExtra(LOGIN_KEY, NO_LOGIN);
+                startActivity(intent);
             }
         },WELCOME_TIMEOUT);
 
     }
-    /*private void handleFacebookAccessToken(AccessToken token) {
-        Log.d(TAG, "handleFacebookAccessToken:" + token);
-
-        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull com.google.android.gms.tasks.Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI();
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                            showAnimation("stop");
-                        }
-
-                        // ...
-                    }
-                });
-    }*/
-
-    public void updateUI(FirebaseUser user){
-        Log.d(TAG, "updateUI called");
-        if(user != null){
-            Intent accountIntent = new Intent(LoginActivity.this, HomeActivity.class);
-            startActivity(accountIntent);
-            finish();
-            showAnimation("stop");
-        }
-    }
-
-    public void showAnimation(String s) {
-        if (s.equals("start")) {
-            btnLogin.setVisibility(View.GONE);
-            lottieAnim.setVisibility(View.VISIBLE);
-            lottieAnim.playAnimation();
-            btnNoLogin.setVisibility(View.GONE);
-        }
-        if (s.equals("stop")) {
-            btnLogin.setVisibility(View.VISIBLE);
-            btnNoLogin.setVisibility(View.VISIBLE);
-            lottieAnim.setVisibility(View.GONE);
-            lottieAnim.pauseAnimation();
-        }
-    }
-
-    private void signInGoogle() {
-        Log.d(TAG, "signInGoogle called");
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
-    }
 
 
 
-    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-        Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
 
-        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            Toast.makeText(LoginActivity.this, "Logged In", Toast.LENGTH_SHORT).show();
-                            updateUI(user);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Login Failure", Toast.LENGTH_SHORT).show();
-                            updateUI(null);
-                        }
 
-                        // ...
-                    }
-                });
-    }
 
 }
 

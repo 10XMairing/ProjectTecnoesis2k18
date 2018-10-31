@@ -350,6 +350,12 @@ public class EventsUtils {
         list.add(new TeamHeader("Technical", list1));
 
         list1 = new ArrayList<>();
+        list1.add(new TeamMember("Bhaskar Ganguli", "Management Head",R.drawable.bhaskar));
+        list1.add(new TeamMember("Pallab Bor Gohain", "Management Head",R.drawable.pallab));
+        list1.add(new TeamMember("Monish Revuri", "Management Head",R.drawable.monish));
+        list.add(new TeamHeader("Management", list1));
+
+        list1 = new ArrayList<>();
         list1.add(new TeamMember("Mairingdao Hojai", "Android Developer",R.drawable.mairing));
         list1.add(new TeamMember("Aniket Agarwala", "Android Developer",R.drawable.aniket));
         list1.add(new TeamMember("Khushboo Maloo", "Android Developer",R.drawable.kushboo));
@@ -388,12 +394,6 @@ public class EventsUtils {
         list1.add(new TeamMember("Bikash Nath", "Publicity And PR Head",R.drawable.bikash));
         list1.add(new TeamMember("Debaditya Kashyap", "Publicity Head",R.drawable.debaditya));
         list.add(new TeamHeader("Publicity and PR", list1));
-
-        list1 = new ArrayList<>();
-        list1.add(new TeamMember("Bhaskar Ganguli", "Management Head",R.drawable.bhaskar));
-        list1.add(new TeamMember("Pallab Bor Gohain", "Management Head",R.drawable.pallab));
-        list1.add(new TeamMember("Monish Revuri", "Management Head",R.drawable.monish));
-        list.add(new TeamHeader("Management", list1));
 
 
         list1 = new ArrayList<>();
