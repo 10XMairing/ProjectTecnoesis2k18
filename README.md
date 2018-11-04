@@ -1,3 +1,3 @@
 # Test282
 
-## register on firebase and cpy/paste google-json file in 'app' folder to test
+### Final released repo for Tecnoesis 2k18 app
